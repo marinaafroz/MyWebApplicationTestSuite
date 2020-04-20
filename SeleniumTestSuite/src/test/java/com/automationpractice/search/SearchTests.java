@@ -69,7 +69,7 @@ public class SearchTests extends TestBase{
 	
 	
 //	Verify popup opened
-	driver.switchTo().frame("fancybox-frame1587153032405");	
+	driver.switchTo().frame(1);	
 	
 //	Verify text displayed 'Printed Dress' on top
 	
@@ -77,6 +77,7 @@ public class SearchTests extends TestBase{
 	Assert.assertEquals(msg, "Printed Dress");
 		
 //	Verify price is $26.00
+	
 	msg = driver.findElement(By.xpath("//p[child::span[@id='our_price_display' and text()='$26.00']]")).getText();
 	Assert.assertEquals(msg, "$26.00");
 		
@@ -98,7 +99,7 @@ public class SearchTests extends TestBase{
 		
 //	mouse hover over both thumbnail and verify image changes on top after hovering
 			
-			 e = driver.findElement(By.id("//img[@id='thumb_8']"));
+			 e = driver.findElement(By.id("thumb_8"));
 			 action.moveToElement(e).build().perform();
 			 
 			 String image_for_leftthumb = "http://automationpractice.com/img/p/8/8-large_default.jpg";
@@ -108,12 +109,15 @@ public class SearchTests extends TestBase{
 			  Thread.sleep(5000);
 			  
 			  
-			  e = driver.findElement(By.id("//img[@id='thumb_9']"));
+			  e = driver.findElement(By.id("thumb_9"));
 				 action.moveToElement(e).build().perform();
 				 
 				 String image_for_rightthumb = "http://automationpractice.com/img/p/9/9-large_default.jpg";
 				  imgActual = driver.findElement(By.id("bigpic")).getAttribute("src");
 				 Assert.assertEquals(imgActual, image_for_rightthumb);
+				 
+				 
+		driver.switchTo().parentFrame();		 
 		
 //	close the popup
 			driver.findElement(By.xpath("//a[@title='Close']")).click();	 

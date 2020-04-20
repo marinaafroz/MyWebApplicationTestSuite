@@ -4,6 +4,8 @@ package com.automationpractice.purchase;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -23,7 +25,7 @@ public class PurchaseTests extends TestBase {
 		        driver.get("http://www.automationpractice.com");
 		
 //	Step 2       Click 'DRESSES' button
-		       driver.findElement(By.xpath("(//a[@title='Dresses' and @class='sf-with-ul'  and text()='Dresses'])[1] ")).click();
+		       driver.findElement(By.xpath("(//li[child::a[text()='Dresses']])[2] ")).click();
 		
 		
 //	Step 3         Click 'CASUAL DRESSES' thumnail under Subcategories
@@ -39,44 +41,69 @@ public class PurchaseTests extends TestBase {
 		
 //	Step 5           Click 'Add to Cart' button
 		driver.findElement(By.xpath("//span[text()='Add to cart' and parent::a[@title='Add to cart']]")).click();
-		
+	
 		
 //	Step 6       Verify message displayed 'Product successfully added to your shopping cart'
-		         String msg =driver.findElement(By.xpath("//h2[preceding-sibling::span[@title='Close window']]")).getText();
-		           Assert.assertEquals(msg, "//h2[preceding-sibling::span[@title='Close window']]");
 		
-//	Step 7       Verify message displayed 'There are 1 items in your cart.
-		        msg =  driver.findElement(By.xpath("//span[contains(text(),'There is 1 item in your cart.')]")).getText();
-		        Assert.assertEquals(msg, "There are 1 items in your cart.");
+		WebDriverWait wait = new WebDriverWait(driver, 100);
+		 e = driver.findElement(By.xpath("//h2[preceding-sibling::span[@title='Close window']]"));
+		wait.until(ExpectedConditions.textToBePresentInElement(e, "Product successfully added to your shopping cart"));
+		
+		         String msg = e.getText();
+		           Assert.assertEquals(msg, "Product successfully added to your shopping cart");
+		
+//	Step 7       Verify message displayed 'There is 1 item in your cart.
+		        msg =  driver.findElement(By.xpath("//h2[child::span[contains(text(),'There is 1 item in your cart.')]]")).getText();
+		        Assert.assertEquals(msg, "There is 1 item in your cart.");
 		        
 //	Step 8      Verify message displayed 'Total products $26.00'
-		        driver.findElement(By.xpath("//strong[contains(text(),'Total product')] "));
-		        driver.findElement(By.xpath("//span[text()='$26.00' and preceding-sibling::strong[contains(text(),'Total product')]]"));
+		        
+		        msg = driver.findElement(By.xpath("//div[child::strong[@class='dark'] and child::span[contains(@class,'ajax_block_products_total')]] ")).getText();
+		        Assert.assertEquals(msg, "Total products $26.00");
+		        
 		
 //	Step 9	      Verify message displayed 'Total shipping $2.00'
-		        driver.findElement(By.xpath("//strong[contains(text(),'Total shipping')] "));
-		        driver.findElement(By.xpath("//span[text()='$2.00' and preceding-sibling::strong[contains(text(),'Total shipping')]]"));
+		        
+		        msg = driver.findElement(By.xpath("//div[child::strong[@class='dark'] and child::span[contains(@class,'ajax_cart_shipping_cost')]] ")).getText();
+		        Assert.assertEquals(msg, "Total shipping  $2.00");
+		        
 
 //	Step 10       Verify message displayed 'Total $28.00'
-		        driver.findElement(By.xpath("//strong[contains(text(),'Total') and following-sibling::span[text()='$28.00']]")); 
-		        driver.findElement(By.xpath("//span[text()='$28.00' and preceding-sibling::strong[contains(text(),'Total')]]"));
-		
+		        
+		        msg = driver.findElement(By.xpath("//div[child::strong[@class='dark'] and child::span[contains(@class,'ajax_block_cart_total')]] ")).getText();
+		        Assert.assertEquals(msg, "Total $28.00");
+		        
+		        
 //	Step 11		   Verify message displayed 'Customers who bought this product also bought:'
 	
 //	Step 12       Click 'Proceed to checkout' button
 		        driver.findElement(By.xpath("//span[contains(text(),'Proceed to checkout')]")).click();
 	
 //	Step 13       Verify url has 'controller=order'
+		        
+		         String current_Url = driver.getCurrentUrl();
+		         current_Url.contains("controller=order");
+		         System.out.println("Current url contains "    +  "'controller=order'");
 
 
 //	Step 14       Verify page title is: 'Order - My Store'
+		        
+		        String page_title = driver.getTitle();
+		        page_title.compareTo("Order - My Store");
+		        System.out.println("Title is " +page_title);
 		
 //	Step 15	      Click 'Proceed to checkout' button
+		        
+		        driver.findElement(By.xpath("//a[child::span[text()='Proceed to checkout']]")).click();
 	
 //	Step 16	   Verify page title is: 'Login - My Store'
-	
+		        
+		       String current_page_title = driver.getTitle();
+		       current_page_title.compareTo("Login - My Store");
+		       System.out.println("The page title is now " +current_page_title);
+		        
 //	Step 17		 Enter valid email address 'abc213@mailinator.com' in email address text field of right side
-	
+	              
 
 //	Step 18		   Enter valid password 'abc1234' in password text field
 	
@@ -130,19 +157,82 @@ public class PurchaseTests extends TestBase {
 //Training Keyword	Actions; Mouse hover; Explicit wait; try catch
 		
 //	Step 1	    Go to http://www.automationpractice.com
+		
+		    driver.get("http://www.automationpractice.com");
+		    
 //	Step 2	   Mouse hover on  product one
+		    
+		    Actions action = new Actions(driver);
+		   WebElement e = driver.findElement(By.xpath("( //img[@title='Faded Short Sleeve T-shirts' and @itemprop = 'image'])[1]"));
+		   action.moveToElement(e).build().perform();
+		    
 //	Step 3	   Click 'Add to Cart'
+		   driver.findElement(By.xpath("(//a[child::span[text()='Add to cart']])[1]")).click();
+		   
 //	Step 4	    Click 'Continue shopping' button
+		   driver.findElement(By.xpath("//span[@title='Continue shopping']")).click();
+		   
 //	Step 5	  Verify Cart has text '1 Product'
+		   String msg = driver.findElement(By.xpath("//a[@title='View my shopping cart']")).getText();
+		   Assert.assertEquals(msg, "Cart 1 Product");
+		   
 //	Step 6	   Mouse hover over 'Cart 1 product' button
+		    e = driver.findElement(By.xpath("//a[@title='View my shopping cart']"));
+		    Actions action_for_cart1 = new Actions(driver);
+		    action_for_cart1.moveToElement(e).build().perform();
+		   
 //	Step 7	   Verify product listed
+		    
+		    String img_thumb1 = "http://automationpractice.com/img/p/1/1-cart_default.jpg";
+		   String img1_Url1 = driver.findElement(By.xpath("//img[@alt='Faded Short Sleeve T-shirts']")).getAttribute("src");
+		    Assert.assertEquals(img1_Url1, img_thumb1);
+		  System.out.println("There is 1 thumbnail for Faded Short Sleeve");  
+		    
+		    
+		  
 //	Step 8	   Now mouse hover on another product
+		  e = driver.findElement(By.xpath("//img[@title='Blouse' and @itemprop = 'image']"));
+		  Actions action_img2 = new Actions(driver);
+		  action_img2.moveToElement(e).build().perform();
+		   
 //	Step 9	   click 'Add to cart' button
-//	Step 10	    Click on Porceed to checkout
+		  driver.findElement(By.xpath("(//a[child::span[text()='Add to cart']])[2]")).click();
+		   
+//	Step 10	    Click on Proceed to checkout
+		  driver.findElement(By.xpath("//span[contains(text(),'Proceed to checkout')]")).click();
+		  
 //	Step 11	    Mouse hover over 'Cart 2 product' button
+		  
+		  e = driver.findElement(By.xpath("//a[@title='View my shopping cart']"));
+		    Actions action_for_cart2 = new Actions(driver);
+		    action_for_cart2.moveToElement(e).build().perform();
+		  
+		  
 //	Step 12	   Verify 2 product listed now
+		     img_thumb1 = "http://automationpractice.com/img/p/1/1-cart_default.jpg";
+			    img1_Url1 = driver.findElement(By.xpath("//img[@alt='Faded Short Sleeve T-shirts']")).getAttribute("src");
+			    Assert.assertEquals(img1_Url1, img_thumb1);
+			  System.out.println("There is 1 thumbnail for Faded Short Sleeve"); 
+			  
+			String  img_thumb2= "http://automationpractice.com/img/p/7/7-cart_default.jpg";
+			String img_Url2 = driver.findElement(By.xpath("//img[@alt='Blouse']")).getAttribute("src");
+			Assert.assertEquals(img_Url2, img_thumb2);
+			
+			System.out.println("There are 2 thumbnail in the cart now");    
+		  
 //	Step 13	   click 'X'button for first product
+			driver.findElement(By.xpath("(//span[contains(@class,'remove_link') and preceding-sibling::div[@class='cart-info']])[1]")).click();
+		  
 //	Step 14	   Verify 1 product deleted and other remain
+			
+			  img_thumb2= "http://automationpractice.com/img/p/7/7-cart_default.jpg";
+			 img_Url2 = driver.findElement(By.xpath("//img[@alt='Blouse']")).getAttribute("src");
+			Assert.assertEquals(img_Url2, img_thumb2);
+			
+			System.out.println(" There is only 1 thumbnail in the cart now");    
+		  
+			
+			
 		
 	}
 			

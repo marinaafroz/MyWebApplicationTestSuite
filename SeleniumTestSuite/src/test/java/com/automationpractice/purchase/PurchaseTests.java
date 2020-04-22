@@ -1,6 +1,11 @@
 package com.automationpractice.purchase;
 
 
+
+
+import java.util.List;
+
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -103,46 +108,139 @@ public class PurchaseTests extends TestBase {
 		       System.out.println("The page title is now " +current_page_title);
 		        
 //	Step 17		 Enter valid email address 'abc213@mailinator.com' in email address text field of right side
+		       driver.findElement(By.id("email")).sendKeys("abc213@mailinator.com");
 	              
 
-//	Step 18		   Enter valid password 'abc1234' in password text field
+//	Step 18		   Enter valid password 'xyz1234' in password text field
+		       driver.findElement(By.id("passwd")).sendKeys("xyz1234");
 	
 //	Step 19       Click 'Sign in' button
-
+                driver.findElement(By.id("SubmitLogin")).click();
 
 //	Step 20      Verify delivery address and billing address are same
-		
+                
+                
+                
+                 List<WebElement> l1 = driver.findElements(By.xpath("//li[preceding-sibling::li[child::h3[text()='Your delivery address']]]"));
+		         List<WebElement> l2 = driver.findElements(By.xpath("//li[preceding-sibling::li[child::h3[text()='Your billing address']]]"));
+		        
+		        if(l1.equals(l2)) {
+		        	
+		        	System.out.println("Delivery address are same as Billing address");
+		        }else {
+		        	
+		        }
+		      
+		  
 //	Step 21	      Click 'Proceed to checkout' button
+		        driver.findElement(By.xpath("//button[@type='submit' and @name='processAddress']")).click();
+		        
 
 //	Step 22	   Click 'Proceed to checkout' button again
+		        driver.findElement(By.xpath("//button[@type='submit' and @name='processCarrier']")).click();
+		        
 //	Step 23	    Verify popup displayed with message 'You must agree to the terms of service before continuing.'
+		        
+		      String popUp_message =  driver.findElement(By.xpath("//div[child::p[contains(text(),'You must')]]")).getText();
+		        
+		        Assert.assertEquals(popUp_message, "You must agree to the terms of service before continuing.");
+		        System.out.println("Popup_message is "  +   "You must agree to the terms of service before continuing.");
+		        
+		        
 //	Step 24	   Close the popup
+		        
+		        driver.findElement(By.xpath("//a[@title='Close']")).click();
+		        
 //	Step 25  	Check I agree to the term ... checkbox
+		        driver.findElement(By.id("cgv")).click();
+		        
 //	Step 26  	Click 'Proceed to checkout' button
+		        driver.findElement(By.xpath("//button[@type='submit' and @name='processCarrier']")).click();
+		        
 //	Step 27  	Verify text displayed 'Your payment method'
+		       msg = driver.findElement(By.xpath("(//span[preceding-sibling::a[@title='Return to Home']])[2]")).getText();
+		       Assert.assertEquals(msg, "Your payment method");
+		        
 //	Step 28 	Verify total price is: $28.00
+		       msg = driver.findElement(By.xpath("//tr[contains(@class,'cart_total_price') and descendant::span[text()='Total']  and descendant::span[text()='$28.00']]")).getText();
+		       Assert.assertEquals(msg, "TOTAL $28.00");
+		       
 //	Step 29	   Click 'Pay by bank wire' button
-//	Step 30	   Verify popup displayed with message 'ORDER SUMMARY'		
+		       driver.findElement(By.xpath("//a[@class='bankwire']")).click();
+		       
+//	Step 30	   Verify popup displayed with message 'ORDER SUMMARY'
+		       msg = driver.findElement(By.xpath("//h1[contains(text(),'Order summary')]")).getText();
+		       Assert.assertEquals(msg, "ORDER SUMMARY");
+		       
 //	Step 31	  Verify popup displayed with message 'BANK-WIRE PAYMENT.'
+		       msg = driver.findElement(By.xpath("//h3[contains(text(),'Bank-wire payment.')]")).getText();
+		       Assert.assertEquals(msg, "BANK-WIRE PAYMENT.");
+		       
 //	Step 32	  Verify popup displayed with message 'You have chosen to pay by bank wire. Here is a short summary of your order:'
+		       msg = driver.findElement(By.xpath("//p[child::strong[contains(text(),'You have chosen')]]")).getText();
+		       Assert.assertEquals(msg, "You have chosen to pay by bank wire. Here is a short summary of your order:");
+		       
 //	Step 33 	Verify popup displayed with message '- The total amount of your order comes to: $28.00 (tax incl.)'
+		       msg = driver.findElement(By.xpath("//p[contains(text(),'The total') and child::span[contains(text(),'$28.00')]]")).getText();
+		       Assert.assertEquals(msg, "- The total amount of your order comes to: $28.00 (tax incl.)");
+		       
 //	Step 34 	Verify popup displayed with message '- We allow the following currency to be sent via bank wire: Dollar'
+		       msg = driver.findElement(By.xpath("//p[contains(text(),'We allow') and child::b[text()='Dollar']]")).getText();
+		       Assert.assertEquals(msg, "- We allow the following currency to be sent via bank wire: Dollar");
+		       
+// Step 35 message is not on the webpage.		       
 //	Step 35 	Verify popup displayed with message 'You must agree to the terms of service before continuing.'
+		       
+// Step 36 and 37 is not highlighted separately. How do Write code together?		       
 //	Step 36 	Verify popup displayed with message '- Bank wire account information will be displayed on the next page. '
+		       
+		       //String expected = "- Bank wire account information will be displayed on the next page. "
+		       	//	+ "- Please confirm your order by clicking \"I confirm my order.\".";
+		      // msg = driver.findElement(By.xpath("//p[contains(text(),'Bank wire account')]")).getText();
+		      // Assert.assertEquals(msg, expected);
+		       
 //	Step 37	  Verify popup displayed with message '- Please confirm your order by clicking "I confirm my order.".'
+		       
 //	Step 38	  Click 'I confirm my order' button
+		        driver.findElement(By.xpath("//button[@type='submit' and child::span[text()='I confirm my order']]")).click();
+		        
 //	Step 39	  Verify popup displayed with message 'Your order on My Store is complete.'
+		        msg = driver.findElement(By.xpath("//p[child::strong[contains(text(),'Your order')]]")).getText();
+		        Assert.assertEquals(msg, "Your order on My Store is complete.");
+		        
 //	Step 40	  Verify popup displayed with message 'Please send us a bank wire with '
+		        
+		        
 //	Step 41	  Verify popup displayed with message '- Amount $28.00 '
 //	Step 42 	Verify popup displayed with message '- Name of account owner Pradeep Macharla '
 //	Step 43 	Verify popup displayed with message '- Bank name RTP'
 //	Step 44	 Verify popup displayed with message 'You must agree to the terms of service before continuing.'
 //	Step 45	 Verify popup displayed with message '- Bank wire account information will be displayed on the next page. '
-//	Step 46	 Verify popup displayed with message '- Please confirm your order by clicking "I confirm my order.".'
+//	Step 46	 Verify popup displayed with message '- Please confirm your order by clicking "I confirm my order.".
+		        
 //	Step 47	  Click on name 'Misir Ali' from top right corner
+		        
+		        driver.findElement(By.xpath("//a[child::span[text()='Misir Ali']]")).click();
+		        
 //	Step 48	  Click on ORDER HISTORY AND DETAILS button
+		        driver.findElement(By.xpath("//li[descendant::span[text()='Order history and details']]")).click();
+		        
 //	Step 49	  Verify there is an order placed today.
+		       // String order_reference = driver.findElement(By.xpath("//tr[1]/td[1]")).getText();
+		        String date = driver.findElement(By.xpath("//tr[1]/td[2]")).getText();
+		        String total_price = driver.findElement(By.xpath("//tr[1]/td[3]")).getText();
+		        
+		        //Assert.assertEquals(order_reference, " MGNJBZUJV");
+		        Assert.assertEquals(date, "04/21/2020");
+		        Assert.assertEquals(total_price, "$28.00");
+		        
+		        System.out.println("An order is placed today, "  +    date    + "Total price is "   +   total_price    );
+		        
+		        
+		        
+		        
 //	Step 50	     Click 'Sign out' button from top right corner	
+		        //driver.findElement(By.xpath("//div[child::a[contains(text(),'Sign out')]]")).click();
 		
 		
 }

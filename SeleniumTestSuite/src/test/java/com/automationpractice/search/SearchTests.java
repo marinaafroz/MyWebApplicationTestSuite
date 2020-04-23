@@ -236,12 +236,15 @@ public class SearchTests extends TestBase{
 		}
 		
 //Step 7	Verify images are displaying as Grid
+		int result = driver.findElements(By.xpath("//li[parent::ul[@class='product_list row grid']]")).size();
+		Assert.assertEquals(result, 4);
 		
 //	Click on 'List' icon now
 		driver.findElement(By.xpath("//li[@id='list']")).click();
 		
 //Step 9  Verify images are displaying as list now
-		
+		result = driver.findElements(By.xpath("//li[parent::ul[@class='product_list row list']]")).size();
+		Assert.assertEquals(result, 4);
 		
 	}
 	

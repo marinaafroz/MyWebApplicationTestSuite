@@ -13,7 +13,7 @@ public class TestBase {
 	
 	
 	
-public WebDriver driver;
+public static WebDriver driver;
 	
 	@BeforeMethod
 	public void beforeMethod() {
@@ -26,6 +26,13 @@ public WebDriver driver;
 		driver.manage().window().maximize();
 		
 	}
+	
+	public static void turnOffImplicitTimeOut() {
+		driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+	}
+	public static void turnOnImplicitTimeOut() {
+		driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+	}	
 	
 	//@AfterMethod
 	//public void closewindow() {

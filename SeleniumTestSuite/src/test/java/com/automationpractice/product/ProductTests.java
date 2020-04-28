@@ -4,17 +4,16 @@ package com.automationpractice.product;
 
 
 
-import org.openqa.selenium.By;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import org.testng.Assert;
-
-
 import org.testng.annotations.Test;
 
 import com.automationpractice.core.TestBase;
@@ -37,84 +36,94 @@ public class ProductTests extends TestBase{
 		}
 	
 	
-	//TC1
-	
+	// TC1
+
 	@Test
 	public void Review_on_product() {
-		
-		
-// Training Keyword	Explicit wait, WebDriverWait; while loop; page refresh; try catch block		
-		
 //Go to http://www.automationpractice.com
 		driver.get("http://www.automationpractice.com");
-		
-		
 //Click Sign in button from top right corner of the page
 		driver.findElement(By.className("login")).click();
-		
 //Enter valid email address 'hellow@mailinator.com' in email address text field of right side
 		driver.findElement(By.id("email")).sendKeys("hellow@mailinator.com");
-		
 //Enter valid password 'hellow' in password text field
 		driver.findElement(By.id("passwd")).sendKeys("hellow");
-		
 //Click 'Sign in' button
 		driver.findElement(By.id("SubmitLogin")).click();
-		
 //Go to http://automationpractice.com/index.php?id_product=7&controller=product
 		driver.get("http://automationpractice.com/index.php?id_product=7&controller=product");
-		
 //Click on Write a review
 		driver.findElement(By.xpath("//a[@class='open-comment-form'and contains(text(),'Write a review')]")).click();
-		
 //Click Send button without typing anything
-		
 		driver.findElement(By.xpath("//span[text()='Send' and parent::button[@id='submitNewMessage']]")).click();
-		
-		
 //Verify 'Title is incorrect' text displayed
 		String msg = driver.findElement(By.xpath("//li[text()='Title is incorrect']")).getText();
 		Assert.assertEquals(msg, "Title is incorrect");
-		
-		
 //Verify 'Comment is incorrect' text displayed
-		  
-		
 		WebDriverWait webdriverWait = new WebDriverWait(driver, 100);
 		WebElement element = driver.findElement(By.xpath("//li[text()='Comment is incorrect']"));
-		
 		webdriverWait.until(ExpectedConditions.textToBePresentInElement(element, "Comment is incorrect"));
 		msg = element.getText();
 		Assert.assertEquals(msg, "Comment is incorrect");
-		
 //Enter 'Awesome dress' in title
 		driver.findElement(By.xpath("//input[@id='comment_title' and @name='title']")).sendKeys("Awesome dress");
-		
 //Enter 'Best purchase ever!!!' in Comment
 		driver.findElement(By.xpath("//textarea[@id='content' and @name='content']")).sendKeys("Best purchase ever!!!");
-		
 //Click Send button
 		driver.findElement(By.xpath("//span[text()='Send' and parent::button[@id='submitNewMessage']]")).click();
-		
-		
 //Verify 'Your comment has been added and will be available once approved by a moderator' text displayed in popup
-		
 		msg = driver.findElement(By.xpath("//p[contains(text(),'Your comment')]")).getText();
 		Assert.assertEquals(msg, "Your comment has been added and will be available once approved by a moderator");
-		
 //Click OK
 		driver.findElement(By.xpath("//span[text()='OK' and parent::button[@type='submit']]")).click();
-		
-		
-		
 // Step16  Verify 'write a review' button gets appeared after few seconds. You may need to refresh the page until the button gets appear
 		
+//		webdriverWait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//a[contains(text(),'Write a review')]"))));
+		
+//		boolean  writeReviewButtonFound = false;
+//		int counter=0;
+//		while(  (writeReviewButtonFound == false)    && ( counter < 20)    ) {
+//			
+//			
+//			System.out.println("driver could not find write review button");
+//			TestBase.turnOffImplicitTimeOut();
+//			try {
+//				writeReviewButtonFound = driver.findElement(By.xpath("//a[contains(text(),'Write a review')]"))!=null;
+//			} catch (Exception e) {
+//				driver.navigate().refresh();
+//				System.out.println("driver refreshed the page");
+//				counter++;
+//			}
+//			
+//			
+//			WebElement e = driver.findElement(By.xpath("//abc"));//throws exception
+//			List<WebElement> e1 = driver.findElements(By.xpath("//abc"));//
+//			int totalel = e1.size();
+//		}
+//		
+		
+		
+		boolean  writeReviewButtonFound = false;
+		int counter=0;
+		while(  (writeReviewButtonFound == false)    && ( counter < 20)    ) {
+			
+			
+			System.out.println("driver could not find write review button");
+			TestBase.turnOffImplicitTimeOut();
+			List<WebElement> elms = driver.findElements(By.xpath("//a[contains(text(),'Write a review')]"));
+			writeReviewButtonFound = elms.size()==1;
+			driver.findElement(null);
+			driver.navigate().refresh();
+			System.out.println("driver refreshed the page");
+			
+			counter++;
+		}
+		TestBase.turnOnImplicitTimeOut();
+		Assert.assertEquals(writeReviewButtonFound, true, "Verify write review button appeared back");
+		
 
-       myCustomWait(driver,"//a[@class='open-comment-form'and contains(text(),'Write a review')]");
-	
-	
+		
 	}
-
 
 
 
@@ -134,9 +143,18 @@ public void Discounted_product_listing() {
 	
 	WebDriverWait webdriverWait = new WebDriverWait(driver, 100);
 	
-    WebElement element = webdriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("(//span[preceding-sibling::span[contains(@class,'old-price product-price') and contains(text(),'$30.51')]])[2]")));
+    WebElement element = webdriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(""
+    		+ "(//div[ descendant::span[@class='price-percent-reduction' and text()='-5%']  and @class='left-block' and following-sibling::div[@class='right-block' and descendant::a[contains(text(),'Printed Summer Dress')]]])[1]"
+    		+ "")));
 	 String msg = element.getText();
-	  Assert.assertEquals(msg, "-5%");
+	 
+	 String[] splits = StringUtils.split(msg);
+	 int total_length = splits.length;
+	 String temp = splits[total_length-1];
+	 //Quick view
+	 //$28.98 $30.51 -5%
+	  Assert.assertEquals(temp, "-5%");
+//	 Assert.assertEquals(msg.contains("-5%"), true);
 	  
 	 // WebElement element = driver.findElement(By.xpath("(//span[preceding-sibling::span[contains(@class,'old-price product-price') and contains(text(),'$30.51')]])[2]"));
 	 // webdriverWait.until(ExpectedConditions.textToBePresentInElement(element, "-5%"));

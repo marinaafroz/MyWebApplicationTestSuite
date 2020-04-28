@@ -4,6 +4,11 @@
   <artifactId>SeleniumTestSuite</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
+    <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+  
   <dependencies>
   <dependency>
         <groupId>org.seleniumhq.selenium</groupId>
@@ -23,6 +28,13 @@
   <version>7.1.0</version>
   
 </dependency>
+<dependency>
+<artifactId>TimeAndTrainingTestFramework-1.2.jar</artifactId>
+<groupId>net.timeandtraining</groupId>
+<version>1.2</version>
+<scope>system</scope>
+<systemPath>${basedir}/lib/TimeAndTrainingTestFramework-1.2.jar</systemPath>
+</dependency>
 
   
   
@@ -40,6 +52,19 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M4</version>
+        <configuration>
+          <suiteXmlFiles>
+            <suiteXmlFile>${testSuite}.xml</suiteXmlFile>
+          </suiteXmlFiles>
+        </configuration>
+      </plugin>
+      
+      
     </plugins>
 
 
